@@ -96,18 +96,14 @@ public final class LogMasterExpansion extends PlaceholderExpansion {
     }
 
     public static String readYamlFile(String directoryName, String fileName) {
-        // Додаємо розширення .yml, якщо його немає
         if (!fileName.endsWith(".yml")) {
             fileName += ".yml";
         }
 
-        // Повний шлях до файлу
         Path filePath = Paths.get(directoryName, UTF8(fileName));
 
         try {
-            // Читаємо всі рядки з файлу
             List<String> lines = Files.readAllLines(filePath);
-            // Об'єднуємо всі рядки в один текстовий блок
             return String.join("\n", lines);
         } catch (IOException e) {
             System.err.println("An error occurred while reading the file: \n" + e.getMessage());
@@ -124,21 +120,16 @@ public final class LogMasterExpansion extends PlaceholderExpansion {
     }
 
     public static String UTF8(String text) {
-        // Створюємо патерн для знаходження {unicode+XXXX}
         Pattern pattern = Pattern.compile("\\{unicode\\+([0-9A-Fa-f]{4,6})\\}");
         Matcher matcher = pattern.matcher(text);
 
-        // Знаходимо і заміняємо всі відповідності
         StringBuffer result = new StringBuffer();
         while (matcher.find()) {
-            // Отримуємо юнікодну послідовність
             String unicodeStr = matcher.group(1);
 
-            // Перетворюємо юнікодну послідовність у символ
             int unicode = Integer.parseInt(unicodeStr, 16);
             String unicodeChar = new String(Character.toChars(unicode));
 
-            // Замінюємо
             matcher.appendReplacement(result, unicodeChar);
         }
         matcher.appendTail(result);
